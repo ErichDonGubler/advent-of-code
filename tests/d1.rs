@@ -108,7 +108,7 @@ treb7uchet
     assert_eq!(parsed.process(), 142);
 }
 
-const INPUT: &str = include_str!("./d1_p1.txt");
+const INPUT: &str = include_str!("./d1.txt");
 
 #[test]
 fn part_1() {
