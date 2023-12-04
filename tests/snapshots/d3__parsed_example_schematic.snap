@@ -35,26 +35,32 @@ Schematic {
         (
             2,
             4,
+            Gear,
         ),
         (
             4,
             7,
+            Other,
         ),
         (
             5,
             4,
+            Gear,
         ),
         (
             6,
             6,
+            Other,
         ),
         (
             9,
             4,
+            Other,
         ),
         (
             9,
             6,
+            Gear,
         ),
     ],
 }

@@ -14,7 +14,7 @@ pub(crate) struct Schematic {
     pub(crate) width: Column,
     pub(crate) height: Line,
     pub(crate) numbers: BTreeMap<Line, Vec<(ColumnRange, u16)>>,
-    pub(crate) symbols: Vec<(Line, Column)>,
+    pub(crate) symbols: Vec<(Line, Column, Symbol)>,
 }
 
 impl Debug for Schematic {
@@ -93,8 +93,11 @@ impl Schematic {
                         ));
                     }
                     '.' => (),
-                    '*' | '#' | '$' | '+' | '-' | '@' | '=' | '%' | '&' | '/' => {
-                        symbols.push((line_num, col(idx)));
+                    '#' | '$' | '+' | '-' | '@' | '=' | '%' | '&' | '/' => {
+                        symbols.push((line_num, col(idx), Symbol::Other));
+                    }
+                    '*' => {
+                        symbols.push((line_num, col(idx), Symbol::Gear));
                     }
                     invalid => panic!(
                         "invalid schematic at {}:{}; \
@@ -114,15 +117,16 @@ impl Schematic {
         }
     }
 
-    fn part_numbers(&self) -> BTreeSet<(Line, ColumnRange, u16)> {
+    #[allow(clippy::type_complexity)]
+    fn part_numbers(&self) -> BTreeMap<(Line, Column, Symbol), BTreeSet<(Line, ColumnRange, u16)>> {
         let Self {
             numbers,
             symbols,
             width,
             height,
         } = self;
-        let mut found_symbols = BTreeSet::new();
-        for (sym_line, sym_col) in symbols {
+        let mut found_symbols = BTreeMap::<_, BTreeSet<_>>::new();
+        for (sym_line, sym_col, sym) in symbols {
             for line in sym_line
                 .saturating_sub(1)
                 .range_inclusive(sym_line.saturating_add(1).min(*height))
@@ -142,13 +146,22 @@ impl Schematic {
                         });
                         search_idx.ok().map(|idx| line_nums[idx].clone())
                     }) {
-                        found_symbols.insert((line, col_range, num));
+                        found_symbols
+                            .entry((*sym_line, *sym_col, *sym))
+                            .or_default()
+                            .insert((line, col_range, num));
                     }
                 }
             }
         }
         found_symbols
     }
+}
+
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub enum Symbol {
+    Gear,
+    Other,
 }
 
 #[nutype(derive(Clone, Copy, Eq, FromStr, Ord, PartialEq, PartialOrd))]
@@ -260,6 +273,7 @@ fn part_1_example() {
     let schematic = Schematic::new(EXAMPLE_ENGINE_SCHEMATIC);
     assert_debug_snapshot!("parsed_example_schematic", schematic);
     let part_numbers = schematic.part_numbers();
+    let part_numbers = part_numbers.values().flatten().collect::<BTreeSet<_>>();
     assert_debug_snapshot!("part_1_part_numbers", part_numbers);
     assert_eq!(
         part_numbers
@@ -277,9 +291,34 @@ fn part_1() {
     assert_eq!(
         Schematic::new(PUZZLE_INPUT)
             .part_numbers()
+            .values()
+            .flatten()
+            .collect::<BTreeSet<_>>()
             .iter()
             .map(|(_line, _col_range, val)| u64::from(*val))
             .sum::<u64>(),
         507214
     );
+}
+
+fn gear_ratio(input: &str) -> u64 {
+    let part_numbers = Schematic::new(input).part_numbers();
+    let gears = part_numbers
+        .iter()
+        .filter(|((_line, _col, sym), v)| sym == &Symbol::Gear && v.len() == 2);
+    gears.fold(0u64, |acc, (_k, v)| {
+        let ((_, _, one), (_, _, two)) = v.iter().collect_tuple().unwrap();
+        acc.checked_add(u64::from(*one).checked_mul(u64::from(*two)).unwrap())
+            .unwrap()
+    })
+}
+
+#[test]
+fn part_2_example() {
+    assert_eq!(gear_ratio(EXAMPLE_ENGINE_SCHEMATIC), 467835);
+}
+
+#[test]
+fn part_2() {
+    assert_eq!(gear_ratio(PUZZLE_INPUT), 72553319);
 }
