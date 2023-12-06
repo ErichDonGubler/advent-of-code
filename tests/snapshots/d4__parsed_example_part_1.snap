@@ -1,0 +1,120 @@
+---
+source: tests/d4.rs
+expression: scratch_cards
+---
+[
+    ScratchCard {
+        winning_nums: [
+            41,
+            48,
+            83,
+            86,
+            17,
+        ],
+        received_nums: [
+            83,
+            86,
+            6,
+            31,
+            17,
+            9,
+            48,
+            53,
+        ],
+    },
+    ScratchCard {
+        winning_nums: [
+            13,
+            32,
+            20,
+            16,
+            61,
+        ],
+        received_nums: [
+            61,
+            30,
+            68,
+            82,
+            17,
+            32,
+            24,
+            19,
+        ],
+    },
+    ScratchCard {
+        winning_nums: [
+            1,
+            21,
+            53,
+            59,
+            44,
+        ],
+        received_nums: [
+            69,
+            82,
+            63,
+            72,
+            16,
+            21,
+            14,
+            1,
+        ],
+    },
+    ScratchCard {
+        winning_nums: [
+            41,
+            92,
+            73,
+            84,
+            69,
+        ],
+        received_nums: [
+            59,
+            84,
+            76,
+            51,
+            58,
+            5,
+            54,
+            83,
+        ],
+    },
+    ScratchCard {
+        winning_nums: [
+            87,
+            83,
+            26,
+            28,
+            32,
+        ],
+        received_nums: [
+            88,
+            30,
+            70,
+            12,
+            93,
+            22,
+            82,
+            36,
+        ],
+    },
+    ScratchCard {
+        winning_nums: [
+            31,
+            18,
+            13,
+            56,
+            72,
+        ],
+        received_nums: [
+            74,
+            77,
+            10,
+            23,
+            35,
+            67,
+            36,
+            11,
+        ],
+    },
+]
