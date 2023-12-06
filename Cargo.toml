@@ -2,8 +2,10 @@
 name = "advent-of-code-2023"
 version = "0.1.0"
 edition = "2021"
+rust_version = "1.74.0"
 
 [dependencies]
+chumsky = "1.0.0-alpha.6"
 format = "0.2.4"
 insta = "1.34.0"
 itertools = "0.12.0"
