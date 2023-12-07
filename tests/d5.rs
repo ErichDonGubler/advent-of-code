@@ -94,18 +94,18 @@ struct Id<Space> {
 //     }
 // }
 
-impl<S1> Id<S1> {
-    pub fn as_space<S2>(self) -> Id<S2>
-    where
-        S2: From<S1>,
-    {
-        let Self { value, space } = self;
-        Id {
-            space: space.into(),
-            value,
-        }
-    }
-}
+// impl<S1> Id<S1> {
+//     pub fn as_space<S2>(self) -> Id<S2>
+//     where
+//         S2: From<S1>,
+//     {
+//         let Self { value, space } = self;
+//         Id {
+//             space: space.into(),
+//             value,
+//         }
+//     }
+// }
 
 #[derive(Debug)]
 struct AlmanacConfig<'a> {
