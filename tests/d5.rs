@@ -14,10 +14,10 @@ use nutype::nutype;
 mod spaces {
     use std::fmt::{self, Debug, Display, Formatter};
 
-    #[derive(Clone, Debug)]
+    #[derive(Clone, Debug, Eq, PartialEq)]
     pub(crate) struct Seed;
 
-    #[derive(Clone, Debug)]
+    #[derive(Clone, Debug, Eq, PartialEq)]
     pub(crate) struct Location;
 
     #[derive(Clone, Eq, PartialEq)]
@@ -81,7 +81,7 @@ mod spaces {
 #[nutype(derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd))]
 struct RawId(u32);
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 struct Id<Space> {
     value: RawId,
     space: Space,
