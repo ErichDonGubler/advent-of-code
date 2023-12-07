@@ -114,7 +114,7 @@ struct AlmanacConfig<'a> {
 }
 
 impl<'a> AlmanacConfig<'a> {
-    pub fn parser() -> impl Parser<'a, &'a str, Self, extra::Err<Rich<'a, char>>> {
+    fn parser() -> impl Parser<'a, &'a str, Self, extra::Err<Rich<'a, char>>> {
         let raw_id = digits(10)
             .to_slice()
             .from_str::<u32>()
@@ -171,6 +171,46 @@ impl<'a> AlmanacConfig<'a> {
             .then(map.repeated().collect::<Vec<_>>())
             .map(|(seeds, maps)| AlmanacConfig { seeds, maps })
     }
+
+    pub fn new(input: &'a str) -> Self {
+        let Self { seeds, maps } = Self::parser().parse(input).into_result().unwrap();
+
+        {
+            let mut maps = maps.iter();
+            let Map {
+                from_space,
+                to_space,
+                entries: _,
+            } = maps.next().unwrap();
+            let spaces::Seed = from_space
+                .clone()
+                .try_into()
+                .expect("first map does not map from `seed`");
+
+            let mut to_space = to_space;
+            loop {
+                match to_space.clone().try_into() {
+                    Ok(spaces::Location) => break,
+                    Err(()) => {}
+                }
+                let map = maps.next().expect("last map does not map to `location`");
+                let Map {
+                    from_space: next_from_space,
+                    to_space: next_to_space,
+                    entries: _,
+                } = map;
+                assert_eq!(
+                to_space,
+                next_from_space,
+                "`{}` map is not continous with previous map; expected to map from `{to_space}`",
+                map.display_type(),
+            );
+                to_space = next_to_space;
+            }
+        }
+
+        Self { seeds, maps }
+    }
 }
 
 #[derive(Debug)]
@@ -206,45 +246,11 @@ const EXAMPLE: &str = include_str!("d5-example.txt");
 
 #[test]
 fn part_1_example() {
-    let example_parse_res = AlmanacConfig::parser().parse(EXAMPLE).into_result();
-    assert_debug_snapshot!("part_1_parsed_example", example_parse_res);
-    let example_almanac_config = example_parse_res.unwrap();
+    let example_almanac_config = AlmanacConfig::new(EXAMPLE);
+    assert_debug_snapshot!("part_1_parsed_example", example_almanac_config);
 
     let AlmanacConfig { seeds, maps } = example_almanac_config;
 
-    {
-        let mut maps = maps.iter();
-        let Map {
-            from_space,
-            to_space,
-            entries: _,
-        } = maps.next().unwrap();
-        let spaces::Seed = from_space
-            .clone()
-            .try_into()
-            .expect("first map does not map from `seed`");
-
-        let mut to_space = to_space;
-        loop {
-            match to_space.clone().try_into() {
-                Ok(spaces::Location) => break,
-                Err(()) => {}
-            }
-            let map = maps.next().expect("last map does not map to `location`");
-            let Map {
-                from_space: next_from_space,
-                to_space: next_to_space,
-                entries: _,
-            } = map;
-            assert_eq!(
-                to_space,
-                next_from_space,
-                "`{}` map is not continous with previous map; expected to map from `{to_space}`",
-                map.display_type(),
-            );
-            to_space = next_to_space;
-        }
-    }
     let highest_id_range = {
         seeds
             .iter()
