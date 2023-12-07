@@ -1,4 +1,4 @@
-use std::{fmt::Display, num::NonZeroUsize};
+use std::{cmp::Ordering, fmt::Display, num::NonZeroUsize};
 
 use chumsky::{
     error::Rich,
@@ -214,6 +214,76 @@ impl<'a> AlmanacConfig<'a> {
 
         Self { seeds, maps }
     }
+
+    pub fn lowest_translated_seed_location(&self) -> Id<spaces::Location> {
+        let Self { seeds, maps } = self;
+
+        let lowest_location_from_seed_seen = seeds
+            .iter()
+            .map(|seed| {
+                let Id {
+                    value: idx,
+                    space: spaces::Seed,
+                } = seed;
+
+                maps.iter().fold(idx.clone(), |translated_idx, map| {
+                    let Map {
+                        from_space: _,
+                        to_space: _,
+                        entries,
+                    } = map;
+                    entries
+                        .binary_search_by(|entry| {
+                            let MapEntry {
+                                start_id_from,
+                                start_id_to: _,
+                                size,
+                            } = entry;
+                            let ord = match start_id_from.cmp(&translated_idx) {
+                                Ordering::Less
+                                    if start_id_from
+                                        .into_inner()
+                                        .checked_add(size.get().try_into().unwrap())
+                                        .unwrap()
+                                        > translated_idx.into_inner() =>
+                                {
+                                    Ordering::Equal
+                                }
+                                ord => ord,
+                            };
+                            ord
+                        })
+                        .ok()
+                        .map(|idx| {
+                            let MapEntry {
+                                start_id_from,
+                                start_id_to,
+                                size: _,
+                            } = &entries[idx];
+
+                            RawId::new(
+                                start_id_to
+                                    .into_inner()
+                                    .checked_add(
+                                        translated_idx
+                                            .into_inner()
+                                            .checked_sub(start_id_from.into_inner())
+                                            .unwrap(),
+                                    )
+                                    .unwrap(),
+                            )
+                        })
+                        .unwrap_or(translated_idx.clone())
+                })
+            })
+            .min()
+            .expect("no seeds specified");
+
+        Id {
+            value: lowest_location_from_seed_seen,
+            space: spaces::Location,
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -252,89 +322,13 @@ fn part_1_example() {
     let example_almanac_config = AlmanacConfig::new(EXAMPLE);
     assert_debug_snapshot!("part_1_parsed_example", example_almanac_config);
 
-    let AlmanacConfig { seeds, maps } = example_almanac_config;
-
-    let highest_id_range = {
-        seeds
-            .iter()
-            .map(|id| id.value)
-            .chain(maps.iter().flat_map(|map| {
-                let Map {
-                    from_space: _,
-                    to_space: _,
-                    entries,
-                } = map;
-                entries.iter().map(|entry| {
-                    let MapEntry {
-                        start_id_from,
-                        start_id_to,
-                        size,
-                    } = entry;
-                    start_id_from
-                        .max(start_id_to)
-                        .into_inner()
-                        .checked_add(u32::try_from(size.get()).unwrap())
-                        .map(RawId::new)
-                        .unwrap()
-                })
-            }))
-            .max()
-    };
-
-    let tables = {
-        let base_table = (0..(usize::try_from(highest_id_range.unwrap().into_inner())
-            .unwrap()
-            .checked_add(1)
-            .unwrap()))
-            .collect::<Vec<_>>();
-
-        maps.iter()
-            .zip(vec![base_table; maps.len()])
-            .map(|(map, mut table)| {
-                let Map {
-                    from_space,
-                    to_space,
-                    entries,
-                } = map;
-
-                for MapEntry {
-                    start_id_from,
-                    start_id_to,
-                    size,
-                } in entries
-                {
-                    let start_id_from = usize::try_from(start_id_from.into_inner()).unwrap();
-                    let start_id_to = usize::try_from(start_id_to.into_inner()).unwrap();
-                    table[start_id_from..(start_id_from.checked_add(size.get()).unwrap())]
-                        .iter_mut()
-                        .zip(start_id_to..(start_id_to.checked_add(size.get()).unwrap()))
-                        .for_each(|(entry, val)| *entry = val);
-                }
-                (from_space, to_space, table)
-            })
-            .collect::<Vec<_>>()
-    };
-
-    let lowest_location_from_seed_seen = seeds
-        .iter()
-        .map(|seed| {
-            let Id {
-                value: idx,
-                space: spaces::Seed,
-            } = seed;
-
-            let mut idx = usize::try_from(idx.into_inner()).unwrap();
-            eprintln!("finding location for seed {idx}");
-            for (from_space, to_space, table) in &tables {
-                idx = table[idx];
-                eprintln!("  {from_space}-to-{to_space}: {idx}");
-            }
-            idx
-        })
-        .min()
-        .expect("no seeds specified");
-
-    assert_eq!(lowest_location_from_seed_seen, 35);
+    assert_eq!(
+        example_almanac_config.lowest_translated_seed_location(),
+        Id {
+            value: RawId::new(35),
+            space: spaces::Location
+        }
+    );
 }
 
 const PUZZLE_INPUT: &str = include_str!("d5.txt");
