@@ -78,7 +78,7 @@ mod spaces {
     }
 }
 
-#[nutype(derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd))]
+#[nutype(derive(Clone, Copy, Debug, Display, Eq, Ord, PartialEq, PartialOrd))]
 struct RawId(u64);
 
 #[derive(Debug, Eq, PartialEq)]
