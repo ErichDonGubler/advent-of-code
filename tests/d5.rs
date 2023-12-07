@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, num::NonZeroUsize};
 
 use chumsky::{
     error::Rich,
@@ -146,7 +146,7 @@ impl<'a> AlmanacConfig<'a> {
                     inline_whitespace(),
                     raw_id,
                     inline_whitespace(),
-                    digits(10).to_slice().from_str::<usize>().unwrapped(),
+                    digits(10).to_slice().from_str::<NonZeroUsize>().unwrapped(),
                     inline_whitespace(),
                     newline().or(end()),
                 ))
@@ -239,7 +239,7 @@ impl<S1, S2> Map<S1, S2> {
 struct MapEntry {
     start_id_from: RawId,
     start_id_to: RawId,
-    size: usize,
+    size: NonZeroUsize,
 }
 
 const EXAMPLE: &str = include_str!("d5-example.txt");
@@ -270,7 +270,7 @@ fn part_1_example() {
                     start_id_from
                         .max(start_id_to)
                         .into_inner()
-                        .checked_add(u32::try_from(*size).unwrap())
+                        .checked_add(u32::try_from(size.get()).unwrap())
                         .map(RawId::new)
                         .unwrap()
                 })
@@ -302,9 +302,9 @@ fn part_1_example() {
                 {
                     let start_id_from = usize::try_from(start_id_from.into_inner()).unwrap();
                     let start_id_to = usize::try_from(start_id_to.into_inner()).unwrap();
-                    table[start_id_from..(start_id_from.checked_add(*size).unwrap())]
+                    table[start_id_from..(start_id_from.checked_add(size.get()).unwrap())]
                         .iter_mut()
-                        .zip(start_id_to..(start_id_to.checked_add(*size).unwrap()))
+                        .zip(start_id_to..(start_id_to.checked_add(size.get()).unwrap()))
                         .for_each(|(entry, val)| *entry = val);
                 }
                 (from_space, to_space, table)
