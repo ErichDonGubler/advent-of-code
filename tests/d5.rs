@@ -173,7 +173,7 @@ impl<'a> AlmanacConfig<'a> {
     }
 
     pub fn new(input: &'a str) -> Self {
-        let Self { seeds, maps } = Self::parser().parse(input).into_result().unwrap();
+        let Self { seeds, mut maps } = Self::parser().parse(input).into_result().unwrap();
 
         {
             let mut maps = maps.iter();
@@ -208,6 +208,9 @@ impl<'a> AlmanacConfig<'a> {
                 to_space = next_to_space;
             }
         }
+
+        maps.iter_mut()
+            .for_each(|map| map.entries.sort_by_key(|entry| entry.start_id_from.clone()));
 
         Self { seeds, maps }
     }

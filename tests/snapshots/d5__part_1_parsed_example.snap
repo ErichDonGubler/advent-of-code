@@ -36,15 +36,6 @@ AlmanacConfig {
             entries: [
                 MapEntry {
                     start_id_from: RawId(
-                        98,
-                    ),
-                    start_id_to: RawId(
-                        50,
-                    ),
-                    size: 2,
-                },
-                MapEntry {
-                    start_id_from: RawId(
                         50,
                     ),
                     start_id_to: RawId(
@@ -52,12 +43,30 @@ AlmanacConfig {
                     ),
                     size: 48,
                 },
+                MapEntry {
+                    start_id_from: RawId(
+                        98,
+                    ),
+                    start_id_to: RawId(
+                        50,
+                    ),
+                    size: 2,
+                },
             ],
         },
         Map {
             from_space: "soil",
             to_space: "fertilizer",
             entries: [
+                MapEntry {
+                    start_id_from: RawId(
+                        0,
+                    ),
+                    start_id_to: RawId(
+                        39,
+                    ),
+                    size: 15,
+                },
                 MapEntry {
                     start_id_from: RawId(
                         15,
@@ -76,39 +85,12 @@ AlmanacConfig {
                     ),
                     size: 2,
                 },
-                MapEntry {
-                    start_id_from: RawId(
-                        0,
-                    ),
-                    start_id_to: RawId(
-                        39,
-                    ),
-                    size: 15,
-                },
             ],
         },
         Map {
             from_space: "fertilizer",
             to_space: "water",
             entries: [
-                MapEntry {
-                    start_id_from: RawId(
-                        53,
-                    ),
-                    start_id_to: RawId(
-                        49,
-                    ),
-                    size: 8,
-                },
-                MapEntry {
-                    start_id_from: RawId(
-                        11,
-                    ),
-                    start_id_to: RawId(
-                        0,
-                    ),
-                    size: 42,
-                },
                 MapEntry {
                     start_id_from: RawId(
                         0,
@@ -126,6 +108,24 @@ AlmanacConfig {
                         57,
                     ),
                     size: 4,
+                },
+                MapEntry {
+                    start_id_from: RawId(
+                        11,
+                    ),
+                    start_id_to: RawId(
+                        0,
+                    ),
+                    size: 42,
+                },
+                MapEntry {
+                    start_id_from: RawId(
+                        53,
+                    ),
+                    start_id_to: RawId(
+                        49,
+                    ),
+                    size: 8,
                 },
             ],
         },
@@ -159,15 +159,6 @@ AlmanacConfig {
             entries: [
                 MapEntry {
                     start_id_from: RawId(
-                        77,
-                    ),
-                    start_id_to: RawId(
-                        45,
-                    ),
-                    size: 23,
-                },
-                MapEntry {
-                    start_id_from: RawId(
                         45,
                     ),
                     start_id_to: RawId(
@@ -184,6 +175,15 @@ AlmanacConfig {
                     ),
                     size: 13,
                 },
+                MapEntry {
+                    start_id_from: RawId(
+                        77,
+                    ),
+                    start_id_to: RawId(
+                        45,
+                    ),
+                    size: 23,
+                },
             ],
         },
         Map {
@@ -192,21 +192,21 @@ AlmanacConfig {
             entries: [
                 MapEntry {
                     start_id_from: RawId(
-                        69,
-                    ),
-                    start_id_to: RawId(
-                        0,
-                    ),
-                    size: 1,
-                },
-                MapEntry {
-                    start_id_from: RawId(
                         0,
                     ),
                     start_id_to: RawId(
                         1,
                     ),
                     size: 69,
+                },
+                MapEntry {
+                    start_id_from: RawId(
+                        69,
+                    ),
+                    start_id_to: RawId(
+                        0,
+                    ),
+                    size: 1,
                 },
             ],
         },
