@@ -114,25 +114,20 @@ struct AlmanacConfig<'a> {
 }
 
 impl<'a> AlmanacConfig<'a> {
-    fn parser() -> impl Parser<'a, &'a str, Self, extra::Err<Rich<'a, char>>> {
-        let raw_id = digits(10)
-            .to_slice()
-            .from_str::<u64>()
-            .unwrapped()
-            .map(RawId::new);
+    fn parse_u64<'b>() -> impl Parser<'b, &'b str, u64, extra::Err<Rich<'b, char>>> + Clone {
+        digits(10).to_slice().from_str::<u64>().unwrapped()
+    }
+
+    fn parser<S>(seeds_marshaller: S) -> impl Parser<'a, &'a str, Self, extra::Err<Rich<'a, char>>>
+    where
+        S: Parser<'a, &'a str, Vec<Id<spaces::Seed>>, extra::Err<Rich<'a, char>>>,
+    {
+        let parse_u64 = digits(10).to_slice().from_str::<u64>().unwrapped();
+
+        let raw_id = parse_u64.map(RawId::new);
 
         let seeds = just("seeds:")
-            .ignore_then(
-                raw_id
-                    .clone()
-                    .map(|value| Id {
-                        space: spaces::Seed,
-                        value,
-                    })
-                    .padded_by(inline_whitespace())
-                    .repeated()
-                    .collect(),
-            )
+            .ignore_then(seeds_marshaller)
             .then_ignore(newline().repeated().exactly(2).or(end()));
 
         let map = ident()
@@ -172,8 +167,14 @@ impl<'a> AlmanacConfig<'a> {
             .map(|(seeds, maps)| AlmanacConfig { seeds, maps })
     }
 
-    pub fn new(input: &'a str) -> Self {
-        let Self { seeds, mut maps } = Self::parser().parse(input).into_result().unwrap();
+    fn new<S>(input: &'a str, seeds_parser: S) -> Self
+    where
+        S: Parser<'a, &'a str, Vec<Id<spaces::Seed>>, extra::Err<Rich<'a, char>>>,
+    {
+        let Self { seeds, mut maps } = Self::parser(seeds_parser)
+            .parse(input)
+            .into_result()
+            .unwrap();
 
         {
             let mut maps = maps.iter();
@@ -213,6 +214,22 @@ impl<'a> AlmanacConfig<'a> {
             .for_each(|map| map.entries.sort_by_key(|entry| entry.start_id_from.clone()));
 
         Self { seeds, maps }
+    }
+
+    pub fn new_part_1(input: &'a str) -> Self {
+        Self::new(
+            input,
+            Self::parse_u64()
+                .map(RawId::new)
+                .map(|value| Id {
+                    value,
+                    space: spaces::Seed,
+                })
+                .padded_by(inline_whitespace())
+                .repeated()
+                .at_least(1)
+                .collect(),
+        )
     }
 
     pub fn lowest_translated_seed_location(&self) -> Id<spaces::Location> {
@@ -319,7 +336,7 @@ const EXAMPLE: &str = include_str!("d5-example.txt");
 
 #[test]
 fn part_1_example() {
-    let example_almanac_config = AlmanacConfig::new(EXAMPLE);
+    let example_almanac_config = AlmanacConfig::new_part_1(EXAMPLE);
     assert_debug_snapshot!("part_1_parsed_example", example_almanac_config);
 
     assert_eq!(
@@ -336,7 +353,7 @@ const PUZZLE_INPUT: &str = include_str!("d5.txt");
 #[test]
 fn part_1() {
     assert_eq!(
-        AlmanacConfig::new(PUZZLE_INPUT).lowest_translated_seed_location(),
+        AlmanacConfig::new_part_1(PUZZLE_INPUT).lowest_translated_seed_location(),
         Id {
             value: RawId::new(836040384),
             space: spaces::Location,
