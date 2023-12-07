@@ -332,3 +332,14 @@ fn part_1_example() {
 }
 
 const PUZZLE_INPUT: &str = include_str!("d5.txt");
+
+#[test]
+fn part_1() {
+    assert_eq!(
+        AlmanacConfig::new(PUZZLE_INPUT).lowest_translated_seed_location(),
+        Id {
+            value: RawId::new(836040384),
+            space: spaces::Location,
+        }
+    )
+}
