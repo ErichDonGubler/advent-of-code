@@ -232,6 +232,36 @@ impl<'a> AlmanacConfig<'a> {
         )
     }
 
+    pub fn new_part_2(input: &'a str) -> Self {
+        let seed_range = Self::parse_u64()
+            .then_ignore(inline_whitespace())
+            .then(Self::parse_u64());
+        let range_to_vals = |(start, len)| {
+            (start..start + len)
+                .into_iter()
+                .map(RawId::new)
+                .map(|value| Id {
+                    value,
+                    space: spaces::Seed,
+                })
+        };
+        Self::new(
+            input,
+            seed_range
+                .clone()
+                .map(range_to_vals)
+                .map(|vals| vals.collect::<Vec<_>>())
+                .foldl(
+                    inline_whitespace().ignore_then(seed_range).repeated(),
+                    |mut acc, range| {
+                        acc.extend(range_to_vals(range));
+                        acc
+                    },
+                )
+                .padded_by(inline_whitespace()),
+        )
+    }
+
     pub fn lowest_translated_seed_location(&self) -> Id<spaces::Location> {
         let Self { seeds, maps } = self;
 
@@ -359,4 +389,18 @@ fn part_1() {
             space: spaces::Location,
         }
     )
+}
+
+#[test]
+fn part_2_example() {
+    let example_almanac_config = AlmanacConfig::new_part_2(EXAMPLE);
+    assert_debug_snapshot!("part_2_parsed_example", example_almanac_config);
+
+    assert_eq!(
+        example_almanac_config.lowest_translated_seed_location(),
+        Id {
+            value: RawId::new(46),
+            space: spaces::Location
+        }
+    );
 }
