@@ -79,7 +79,7 @@ mod spaces {
 }
 
 #[nutype(derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd))]
-struct RawId(u32);
+struct RawId(u64);
 
 #[derive(Debug, Eq, PartialEq)]
 struct Id<Space> {
@@ -117,7 +117,7 @@ impl<'a> AlmanacConfig<'a> {
     fn parser() -> impl Parser<'a, &'a str, Self, extra::Err<Rich<'a, char>>> {
         let raw_id = digits(10)
             .to_slice()
-            .from_str::<u32>()
+            .from_str::<u64>()
             .unwrapped()
             .map(RawId::new);
 
