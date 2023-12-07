@@ -404,3 +404,15 @@ fn part_2_example() {
         }
     );
 }
+
+#[test]
+#[ignore]
+fn part_2() {
+    assert_eq!(
+        AlmanacConfig::new_part_2(PUZZLE_INPUT).lowest_translated_seed_location(),
+        Id {
+            value: RawId::new(10834440),
+            space: spaces::Location,
+        }
+    )
+}
