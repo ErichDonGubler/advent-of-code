@@ -3,32 +3,34 @@ source: tests/d5.rs
 expression: example_almanac_config
 ---
 AlmanacConfig {
-    seeds: [
-        Id {
-            value: RawId(
-                79,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                14,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                55,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                13,
-            ),
-            space: Seed,
-        },
-    ],
+    seeds: Day1(
+        [
+            Id {
+                value: RawId(
+                    79,
+                ),
+                space: Seed,
+            },
+            Id {
+                value: RawId(
+                    14,
+                ),
+                space: Seed,
+            },
+            Id {
+                value: RawId(
+                    55,
+                ),
+                space: Seed,
+            },
+            Id {
+                value: RawId(
+                    13,
+                ),
+                space: Seed,
+            },
+        ],
+    ),
     maps: [
         Map {
             from_space: "seed",

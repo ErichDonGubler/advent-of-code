@@ -3,170 +3,28 @@ source: tests/d5.rs
 expression: example_almanac_config
 ---
 AlmanacConfig {
-    seeds: [
-        Id {
-            value: RawId(
-                79,
+    seeds: Day2(
+        [
+            (
+                Id {
+                    value: RawId(
+                        79,
+                    ),
+                    space: Seed,
+                },
+                14,
             ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                80,
+            (
+                Id {
+                    value: RawId(
+                        55,
+                    ),
+                    space: Seed,
+                },
+                13,
             ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                81,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                82,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                83,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                84,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                85,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                86,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                87,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                88,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                89,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                90,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                91,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                92,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                55,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                56,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                57,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                58,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                59,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                60,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                61,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                62,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                63,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                64,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                65,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                66,
-            ),
-            space: Seed,
-        },
-        Id {
-            value: RawId(
-                67,
-            ),
-            space: Seed,
-        },
-    ],
+        ],
+    ),
     maps: [
         Map {
             from_space: "seed",
