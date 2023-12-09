@@ -2,7 +2,7 @@
 name = "advent-of-code-2023"
 version = "0.1.0"
 edition = "2021"
-rust_version = "1.74.0"
+rust-version = "1.74.1"
 
 [dependencies]
 chumsky = "1.0.0-alpha.6"
