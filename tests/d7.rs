@@ -1,7 +1,7 @@
 use arrayvec::ArrayVec;
 use insta::assert_debug_snapshot;
 
-const PART_1_EXAMPLE: &str = "\
+const EXAMPLE: &str = "\
 32T3K 765
 T55J5 684
 KK677 28
@@ -153,7 +153,7 @@ fn part_1_total_winnings(plays: &mut [Play]) -> u64 {
 
 #[test]
 fn part_1_example() {
-    let mut plays = Play::part_1(PART_1_EXAMPLE);
+    let mut plays = Play::part_1(EXAMPLE);
     let winnings = part_1_total_winnings(&mut plays);
     assert_debug_snapshot!(plays);
     assert_eq!(winnings, 6440);
