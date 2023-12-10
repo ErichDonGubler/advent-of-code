@@ -30,9 +30,37 @@ impl Races {
         assert_eq!(time.len(), distance.len());
         Self { time, distance }
     }
+
+    fn winning_races_product(&self) -> usize {
+        let Self { time, distance } = self;
+        time.iter()
+            .copied()
+            .zip(distance.iter().copied())
+            .map(|(time, current_distance_record)| {
+                (1..time.saturating_sub(1))
+                    .filter(|&button_hold_time| {
+                        (time - button_hold_time)
+                            .checked_mul(button_hold_time)
+                            .unwrap()
+                            > current_distance_record
+                    })
+                    .count()
+            })
+            .product::<usize>()
+    }
 }
 
 #[test]
 fn part_1_example() {
-    assert_debug_snapshot!(Races::new(EXAMPLE_PART_1));
+    let races = Races::new(EXAMPLE_PART_1);
+    assert_debug_snapshot!(races);
+    assert_eq!(races.winning_races_product(), 288);
+}
+
+const PUZZLE_INPUT: &str = include_str!("d6.txt");
+
+#[test]
+fn part_1() {
+    let races = Races::new(PUZZLE_INPUT);
+    assert_eq!(races.winning_races_product(), 252000);
 }
