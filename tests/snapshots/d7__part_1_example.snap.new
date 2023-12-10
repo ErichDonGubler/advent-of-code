@@ -1,0 +1,67 @@
+---
+source: tests/d7.rs
+assertion_line: 158
+expression: plays
+---
+[
+    Play {
+        hand: Hand(
+            [
+                N3,
+                N2,
+                T,
+                N3,
+                K,
+            ],
+        ),
+        bid: 765,
+    },
+    Play {
+        hand: Hand(
+            [
+                K,
+                T,
+                J,
+                J,
+                T,
+            ],
+        ),
+        bid: 220,
+    },
+    Play {
+        hand: Hand(
+            [
+                K,
+                K,
+                N6,
+                N7,
+                N7,
+            ],
+        ),
+        bid: 28,
+    },
+    Play {
+        hand: Hand(
+            [
+                T,
+                N5,
+                N5,
+                J,
+                N5,
+            ],
+        ),
+        bid: 684,
+    },
+    Play {
+        hand: Hand(
+            [
+                Q,
+                Q,
+                Q,
+                J,
+                A,
+            ],
+        ),
+        bid: 483,
+    },
+]

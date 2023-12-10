@@ -5,6 +5,7 @@ edition = "2021"
 rust-version = "1.74.1"
 
 [dependencies]
+arrayvec = "0.7.4"
 chumsky = "1.0.0-alpha.6"
 format = "0.2.4"
 insta = "1.34.0"
