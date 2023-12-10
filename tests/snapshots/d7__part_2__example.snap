@@ -1,0 +1,81 @@
+---
+source: tests/d7.rs
+expression: "plays.iter().map(|p| (p, p.hand.trick())).collect::<Vec<_>>()"
+---
+[
+    (
+        Play {
+            hand: Hand(
+                [
+                    N3,
+                    N2,
+                    T,
+                    N3,
+                    K,
+                ],
+            ),
+            bid: 765,
+        },
+        OnePair,
+    ),
+    (
+        Play {
+            hand: Hand(
+                [
+                    K,
+                    K,
+                    N6,
+                    N7,
+                    N7,
+                ],
+            ),
+            bid: 28,
+        },
+        TwoPair,
+    ),
+    (
+        Play {
+            hand: Hand(
+                [
+                    T,
+                    N5,
+                    N5,
+                    J,
+                    N5,
+                ],
+            ),
+            bid: 684,
+        },
+        FourOfAKind,
+    ),
+    (
+        Play {
+            hand: Hand(
+                [
+                    Q,
+                    Q,
+                    Q,
+                    J,
+                    A,
+                ],
+            ),
+            bid: 483,
+        },
+        FourOfAKind,
+    ),
+    (
+        Play {
+            hand: Hand(
+                [
+                    K,
+                    T,
+                    J,
+                    J,
+                    T,
+                ],
+            ),
+            bid: 220,
+        },
+        FourOfAKind,
+    ),
+]
