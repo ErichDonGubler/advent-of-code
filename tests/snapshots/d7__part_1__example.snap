@@ -1,6 +1,5 @@
 ---
 source: tests/d7.rs
-assertion_line: 158
 expression: plays
 ---
 [
