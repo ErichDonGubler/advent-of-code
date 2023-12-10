@@ -1,0 +1,40 @@
+---
+source: tests/d8.rs
+expression: example_1
+---
+Map {
+    instructions: [
+        Right,
+        Left,
+    ],
+    nodes: {
+        "AAA": (
+            "BBB",
+            "CCC",
+        ),
+        "BBB": (
+            "DDD",
+            "EEE",
+        ),
+        "CCC": (
+            "ZZZ",
+            "GGG",
+        ),
+        "DDD": (
+            "DDD",
+            "DDD",
+        ),
+        "EEE": (
+            "EEE",
+            "EEE",
+        ),
+        "GGG": (
+            "GGG",
+            "GGG",
+        ),
+        "ZZZ": (
+            "ZZZ",
+            "ZZZ",
+        ),
+    },
+}

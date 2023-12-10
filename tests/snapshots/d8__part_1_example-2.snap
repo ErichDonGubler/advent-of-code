@@ -1,0 +1,25 @@
+---
+source: tests/d8.rs
+expression: example_2
+---
+Map {
+    instructions: [
+        Left,
+        Left,
+        Right,
+    ],
+    nodes: {
+        "AAA": (
+            "BBB",
+            "BBB",
+        ),
+        "BBB": (
+            "AAA",
+            "ZZZ",
+        ),
+        "ZZZ": (
+            "ZZZ",
+            "ZZZ",
+        ),
+    },
+}
