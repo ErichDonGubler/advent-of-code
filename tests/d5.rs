@@ -141,7 +141,7 @@ impl<'a> AlmanacConfig<'a> {
             .then(
                 group((
                     inline_whitespace(),
-                    raw_id.clone(),
+                    raw_id,
                     inline_whitespace(),
                     raw_id,
                     inline_whitespace(),
@@ -194,9 +194,8 @@ impl<'a> AlmanacConfig<'a> {
 
             let mut to_space = to_space;
             loop {
-                match to_space.clone().try_into() {
-                    Ok(spaces::Location) => break,
-                    Err(()) => {}
+                if let Ok(spaces::Location) = to_space.clone().try_into() {
+                    break;
                 }
                 let map = maps.next().expect("last map does not map to `location`");
                 let Map {
@@ -215,7 +214,7 @@ impl<'a> AlmanacConfig<'a> {
         }
 
         maps.iter_mut()
-            .for_each(|map| map.entries.sort_by_key(|entry| entry.start_id_from.clone()));
+            .for_each(|map| map.entries.sort_by_key(|entry| entry.start_id_from));
 
         Self { seeds, maps }
     }
@@ -268,7 +267,7 @@ impl<'a> AlmanacConfig<'a> {
                     space: spaces::Seed,
                 } = seed;
 
-                maps.iter().fold(idx.clone(), |translated_idx, map| {
+                maps.iter().fold(idx, |translated_idx, map| {
                     let Map {
                         from_space: _,
                         to_space: _,
@@ -317,7 +316,7 @@ impl<'a> AlmanacConfig<'a> {
                                     .unwrap(),
                             )
                         })
-                        .unwrap_or(translated_idx.clone())
+                        .unwrap_or(translated_idx)
                 })
             })
             .min()

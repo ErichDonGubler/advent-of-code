@@ -15,12 +15,12 @@ impl ScratchCard {
         line = line.strip_prefix(": ").unwrap();
         let (winning_nums, received_nums) = line.split_once(" | ").unwrap();
         let winning_nums = winning_nums
-            .split(" ")
+            .split(' ')
             .filter(|s| !s.is_empty())
             .map(|num| num.parse::<u8>().unwrap())
             .collect::<Vec<_>>();
         let received_nums = received_nums
-            .split(" ")
+            .split(' ')
             .filter(|s| !s.is_empty())
             .map(|num| num.parse::<u8>().unwrap())
             .collect::<Vec<_>>();
