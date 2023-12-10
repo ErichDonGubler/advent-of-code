@@ -1,8 +1,8 @@
 ---
 source: tests/d6.rs
-expression: "Races::new(EXAMPLE_PART_1)"
+expression: races
 ---
-Races {
+RacesPart1 {
     time: [
         7,
         15,
