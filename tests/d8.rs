@@ -109,3 +109,62 @@ const PUZZLE_INPUT: &str = include_str!("d8.txt");
 fn part_1() {
     assert_eq!(num_instrs_until_complete(&Map::new(PUZZLE_INPUT)), 15517);
 }
+
+fn num_ghost_instrs_until_complete(map: &Map) -> u64 {
+    let Map {
+        instructions,
+        nodes,
+    } = map;
+
+    let start_nodes = nodes
+        .keys()
+        .filter(|name| name.ends_with('A'))
+        .map(|n| *n)
+        .collect::<Vec<_>>();
+    let mut curr_nodes = start_nodes.clone();
+
+    let mut instructions = instructions.iter().cycle();
+    let mut count = 0u64;
+    loop {
+        count = count.checked_add(1).unwrap();
+        let instr = instructions.next().unwrap();
+        for curr_node in &mut curr_nodes {
+            let (left, right) = nodes[curr_node];
+            *curr_node = match instr {
+                Instr::Left => left,
+                Instr::Right => right,
+            };
+        }
+        if curr_nodes.iter().all(|curr| curr.ends_with('Z')) {
+            return count;
+        }
+    }
+}
+
+#[test]
+fn part_2_example() {
+    let example_3 = Map::new(
+        "\
+LR
+
+11A = (11B, XXX)
+11B = (XXX, 11Z)
+11Z = (11B, XXX)
+22A = (22B, XXX)
+22B = (22C, 22C)
+22C = (22Z, 22Z)
+22Z = (22B, 22B)
+XXX = (XXX, XXX)
+",
+    );
+    assert_debug_snapshot!(example_3);
+    assert_eq!(num_ghost_instrs_until_complete(&example_3), 6);
+}
+
+#[test]
+fn part_2() {
+    assert_eq!(
+        num_ghost_instrs_until_complete(&Map::new(PUZZLE_INPUT)),
+        9001
+    );
+}
