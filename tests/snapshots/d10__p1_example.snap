@@ -1,0 +1,38 @@
+---
+source: tests/d10.rs
+expression: map
+---
+Map {
+    parsed: [
+        Ground,
+        Ground,
+        Ground,
+        Ground,
+        Ground,
+        Ground,
+        RightDownBend,
+        HorizontalPipe,
+        LeftDownBend,
+        Ground,
+        Ground,
+        VerticalPipe,
+        Ground,
+        VerticalPipe,
+        Ground,
+        Ground,
+        RightUpBend,
+        HorizontalPipe,
+        LeftUpBend,
+        Ground,
+        Ground,
+        Ground,
+        Ground,
+        Ground,
+        Ground,
+    ],
+    dimensions: (
+        5,
+        5,
+    ),
+    start_position: None,
+}
