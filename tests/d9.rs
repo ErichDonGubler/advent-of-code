@@ -74,6 +74,22 @@ impl OasisAnalyzer {
                 .fold(0, |acc, val| acc + val)
         })
     }
+
+    pub fn predict_prev_in_geometric_seq(&self) -> impl Iterator<Item = i32> + '_ {
+        let Self { values } = self;
+        values.iter().map(|value_over_time| {
+            let AnalyzedValue {
+                value_over_time,
+                analysis,
+            } = value_over_time;
+            analysis
+                .iter()
+                .rev()
+                .map(|row| row.first().unwrap())
+                .chain(Some(value_over_time.first().unwrap()))
+                .fold(0, |acc, val| val - acc)
+        })
+    }
 }
 
 #[test]
@@ -93,5 +109,15 @@ fn part_1() {
             .predict_next_in_geometric_seq()
             .sum::<i32>(),
         1725987467
+    );
+}
+
+#[test]
+fn part_2() {
+    assert_eq!(
+        OasisAnalyzer::new(include_str!("./d9.txt"))
+            .predict_prev_in_geometric_seq()
+            .sum::<i32>(),
+        971
     );
 }
