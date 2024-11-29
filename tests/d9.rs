@@ -71,7 +71,7 @@ impl OasisAnalyzer {
                 .rev()
                 .map(|row| row.last().unwrap())
                 .chain(Some(value_over_time.last().unwrap()))
-                .fold(0, |acc, val| acc + val)
+                .sum::<i32>()
         })
     }
 
