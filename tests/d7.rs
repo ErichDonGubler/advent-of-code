@@ -223,7 +223,7 @@ mod part_2 {
             };
 
             let count_by_card = count_by_card.as_slice();
-            let trick = match count_by_card {
+            match count_by_card {
                 &[(_, 5)] | &[(CamelCard::J, _), (_, _)] | &[(_, _), (CamelCard::J, _)] => {
                     Trick::FiveOfAKind
                 }
@@ -239,8 +239,7 @@ mod part_2 {
                 &[.., (_, 2)] | &[(CamelCard::J, 1), (..), (..), (..), (_, 1)] => Trick::OnePair,
                 &[.., (_, 1)] => Trick::HighCard,
                 _ => panic!("lolwat"),
-            };
-            trick
+            }
         }
     }
 
