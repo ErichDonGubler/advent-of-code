@@ -7,3 +7,4 @@ rust-version = "1.83"
 [dependencies]
 insta = "1.41.1"
 itertools = "0.13.0"
+regex = "1.11.1"
