@@ -1,6 +1,8 @@
-use advent_of_code_2024::uniform_width_ascii_lines;
+use advent_of_code_2024::{
+    search_direction::{SearchDirection, Sign},
+    uniform_width_ascii_lines,
+};
 use itertools::Itertools as _;
-use search_direction::{SearchDirection, Sign};
 use strum::IntoEnumIterator as _;
 
 const EXAMPLE_P1: &str = "\
@@ -22,52 +24,6 @@ fn parse_grid(input: &str) -> (Vec<&[u8]>, usize) {
         .collect::<Vec<_>>();
     let width = parsed[0].len();
     (parsed, width)
-}
-
-mod search_direction {
-    #[derive(Clone, Copy, Debug, Eq, PartialEq, strum::EnumIter)]
-    pub(crate) enum Sign {
-        Neutral,
-        Negative,
-        Positive,
-    }
-
-    #[derive(Clone)]
-    pub(crate) struct SearchDirection {
-        pub horizontal: Sign,
-        pub vertical: Sign,
-    }
-
-    impl SearchDirection {
-        pub fn to_2d_offsets(
-            &self,
-            origin: (usize, usize),
-            bounds: (usize, usize),
-            offset: usize,
-        ) -> Option<(usize, usize)> {
-            let &Self {
-                horizontal,
-                vertical,
-            } = self;
-
-            let (origin_row, origin_col) = origin;
-            let (bounds_row, bounds_col) = bounds;
-
-            let row_idx = match vertical {
-                Sign::Neutral => Some(origin_row),
-                Sign::Negative => origin_row.checked_sub(offset),
-                Sign::Positive => origin_row.checked_add(offset).filter(|o| *o < bounds_row),
-            };
-
-            let col_idx = match horizontal {
-                Sign::Neutral => Some(origin_col),
-                Sign::Negative => origin_col.checked_sub(offset),
-                Sign::Positive => origin_col.checked_add(offset).filter(|o| *o < bounds_col),
-            };
-
-            row_idx.zip(col_idx)
-        }
-    }
 }
 
 /// `dimensions` is `(num_rows, num_cols)`.
