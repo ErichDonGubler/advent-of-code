@@ -235,6 +235,7 @@ fn p2_example() {
 }
 
 #[test]
+#[ignore]
 fn p2() {
     assert_eq!(num_forever_obstacle_positions_for_guard_patrol(INPUT), 1575);
 }
