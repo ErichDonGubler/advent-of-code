@@ -1,3 +1,4 @@
+use advent_of_code_2024::uniform_width_ascii_lines;
 use itertools::Itertools as _;
 use search_direction::{SearchDirection, Sign};
 use strum::IntoEnumIterator as _;
@@ -16,21 +17,11 @@ MXMXAXMASX
 ";
 
 fn parse_grid(input: &str) -> (Vec<&[u8]>, usize) {
-    let mut first_line_width = None;
-    let parsed = input
-        .lines()
-        .map(|line| {
-            match (first_line_width, line.len()) {
-                (None, len) => first_line_width = Some(len),
-                (Some(expected), actual) => {
-                    assert_eq!(expected, actual, "line does not match first line's length")
-                }
-            };
-            assert!(line.is_ascii());
-            line.as_bytes()
-        })
-        .collect();
-    (parsed, first_line_width.unwrap())
+    let parsed = uniform_width_ascii_lines(input.lines())
+        .map(|line| line.as_bytes())
+        .collect::<Vec<_>>();
+    let width = parsed[0].len();
+    (parsed, width)
 }
 
 mod search_direction {
