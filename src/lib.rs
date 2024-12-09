@@ -247,22 +247,27 @@ pub mod search_direction {
                 vertical,
             } = self;
 
-            let (origin_row, origin_col) = origin;
-            let (bounds_row, bounds_col) = bounds;
-
-            let row_idx = match vertical {
-                Sign::Neutral => Some(origin_row),
-                Sign::Negative => origin_row.checked_sub(offset),
-                Sign::Positive => origin_row.checked_add(offset).filter(|o| *o < bounds_row),
+            let convert = |value, sign| {
+                let (value, sign) = match sign {
+                    Sign::Positive => (value, crate::space::PosNeg::Positive),
+                    Sign::Neutral => (0, crate::space::PosNeg::Positive),
+                    Sign::Negative => (value, crate::space::PosNeg::Negative),
+                };
+                let value = crate::space::Offset::new(value);
+                crate::space::RelativeOffset { value, sign }
             };
 
-            let col_idx = match horizontal {
-                Sign::Neutral => Some(origin_col),
-                Sign::Negative => origin_col.checked_sub(offset),
-                Sign::Positive => origin_col.checked_add(offset).filter(|o| *o < bounds_col),
+            let bounds = crate::space::d2::Size::from_row_major(bounds);
+            let origin = crate::space::d2::Coords::from_row_major(origin);
+            let offset = crate::space::d2::RelativeOffset {
+                row: convert(offset, vertical),
+                col: convert(offset, horizontal),
             };
 
-            row_idx.zip(col_idx)
+            let coords = crate::space::d2::apply_rel_offset(bounds, origin, offset)?;
+            let crate::space::d2::Coords { row, col } = coords;
+            let [row, col] = [row, col].map(|coord| coord.into_inner());
+            Some((row, col))
         }
     }
 }
