@@ -119,9 +119,65 @@ pub mod space {
     }
 
     pub mod d2 {
-        use std::ops::{Neg, Sub};
+        use std::ops::{Index, IndexMut, Neg, Sub};
 
         use super::Coord;
+
+        #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+        pub struct RowMajorGridVec<T> {
+            inner: Vec<Vec<T>>,
+        }
+
+        impl<T> RowMajorGridVec<T> {
+            pub fn new(width: usize, inner: Vec<Vec<T>>) -> Self {
+                assert!(inner.iter().all(|row| row.len() == width));
+                Self { inner }
+            }
+        }
+
+        impl<T> Index<Coord> for RowMajorGridVec<T> {
+            type Output = [T];
+
+            fn index(&self, index: Coord) -> &Self::Output {
+                &self[index.into_inner()]
+            }
+        }
+
+        impl<T> IndexMut<Coord> for RowMajorGridVec<T> {
+            fn index_mut(&mut self, index: Coord) -> &mut Self::Output {
+                &mut self[index.into_inner()]
+            }
+        }
+
+        impl<T> Index<usize> for RowMajorGridVec<T> {
+            type Output = [T];
+
+            fn index(&self, index: usize) -> &Self::Output {
+                &self.inner[index]
+            }
+        }
+
+        impl<T> IndexMut<usize> for RowMajorGridVec<T> {
+            fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+                &mut self.inner[index]
+            }
+        }
+
+        impl<T> Index<Coords> for RowMajorGridVec<T> {
+            type Output = T;
+
+            fn index(&self, index: Coords) -> &Self::Output {
+                let Coords { row, col } = index;
+                &self[row][col.into_inner()]
+            }
+        }
+
+        impl<T> IndexMut<Coords> for RowMajorGridVec<T> {
+            fn index_mut(&mut self, index: Coords) -> &mut Self::Output {
+                let Coords { row, col } = index;
+                &mut self[row][col.into_inner()]
+            }
+        }
 
         #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
         pub struct Size {
