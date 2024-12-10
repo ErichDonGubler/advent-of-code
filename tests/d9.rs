@@ -94,3 +94,69 @@ const INPUT: &str = include_str!("./d9.txt");
 fn p1() {
     assert_eq!(p1_compact_and_compute_checksum(INPUT), 6200294120911);
 }
+
+fn p2_soft_compact_and_compute_checksum(input: &str) -> u64 {
+    let mut block_groups = parse_disk_map(input);
+
+    let mut checksum = 0u64;
+    let mut acc_checksum = |pos, value| {
+        checksum = checksum
+            .checked_add(u64::from(pos) * u64::from(value))
+            .unwrap();
+    };
+
+    let mut maybe_move_block_group_idx = block_groups.len().checked_sub(1).unwrap();
+    while maybe_move_block_group_idx != 0 {
+        let (_maybe_move_group_block_idx, maybe_move_group_file_id, maybe_move_group_count) =
+            block_groups[maybe_move_block_group_idx];
+
+        if let Some((new_block_group_idx, new_block_idx)) = block_groups
+            [..maybe_move_block_group_idx]
+            .iter()
+            .copied()
+            .enumerate()
+            .tuple_windows()
+            .find_map(
+                |(
+                    (_group_1_idx, (group_1_start_idx, _file_id, group_1_count)),
+                    (group_2_idx, (group_2_start_idx, ..)),
+                )| {
+                    let this_group_end_block_idx = group_1_start_idx + u32::from(group_1_count);
+                    let fits = u32::from(maybe_move_group_count)
+                        <= (group_2_start_idx - this_group_end_block_idx);
+                    fits.then_some((group_2_idx, this_group_end_block_idx))
+                },
+            )
+        {
+            block_groups.remove(maybe_move_block_group_idx);
+            block_groups.insert(
+                new_block_group_idx,
+                (
+                    new_block_idx,
+                    maybe_move_group_file_id,
+                    maybe_move_group_count,
+                ),
+            );
+        }
+
+        maybe_move_block_group_idx -= 1;
+    }
+
+    for &(group_block_idx, group_file_id, group_count) in &block_groups {
+        for block_idx in group_block_idx..group_block_idx + u32::from(group_count) {
+            acc_checksum(block_idx, group_file_id);
+        }
+    }
+
+    checksum
+}
+
+#[test]
+fn p2_example() {
+    assert_eq!(p2_soft_compact_and_compute_checksum(EXAMPLE), 2858);
+}
+
+#[test]
+fn p2() {
+    assert_eq!(p2_soft_compact_and_compute_checksum(INPUT), 2858);
+}
